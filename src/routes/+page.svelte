@@ -29,8 +29,7 @@
 <style>
     .bottom-nav {
         display: flex;
-        justify-content: space-between;
-        flex-direction: row-reverse;
+        justify-content: center;
         padding: 40px;
         position: fixed;
         bottom: 0;
