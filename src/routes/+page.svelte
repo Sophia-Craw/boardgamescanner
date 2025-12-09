@@ -31,7 +31,7 @@
         display: flex;
         justify-content: space-between;
         flex-direction: row-reverse;
-        padding: 20px;
+        padding: 40px;
         position: fixed;
         bottom: 0;
         left: 0;
