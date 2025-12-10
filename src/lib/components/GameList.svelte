@@ -89,6 +89,12 @@
         color: white;
         font-family: sans-serif;
         font-weight: 800;
+        transition: 0.08s;
+    }
+
+    .tab:active {
+        scale: 95%;
+        opacity: 60%;
     }
 
     .tab-select {
@@ -101,6 +107,12 @@
         color: rgb(0, 0, 0);
         font-family: sans-serif;
         font-weight: 800;
+        transition: 0.08s;
+    }
+
+    .tab-select:active {
+        scale: 95%;
+        opacity: 60%;
     }
 
     .tab:active {
