@@ -1,5 +1,6 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
+    import { page } from "$app/state";
     import Quagga from "@ericblade/quagga2";
     import { onMount } from "svelte";
 
@@ -44,28 +45,28 @@
         );
 
         Quagga.onDetected((upc) => {
-            upcCode = upc.codeResult.code!
-            isDetected = true
+            upcCode = upc.codeResult.code!;
+            isDetected = true;
         });
 
         Quagga.offDetected(() => {
-            isDetected = false
-            upcCode = ""
-        })
-    })
+            isDetected = false;
+            upcCode = "";
+        });
+    });
 
     const scan = () => {
         if (isDetected && upcCode) {
             goto("/result/" + upcCode);
         }
-    }
+    };
 </script>
 
 <main>
     <video bind:this={video}></video>
     <div class="scan-actions">
         <button class="btn-scan" disabled={!isDetected} onclick={scan}>
-            <img src="" alt="">
+            <img src="" alt="" />
         </button>
     </div>
 </main>
@@ -73,7 +74,15 @@
 <style>
     video {
         width: 100dvw;
-        mask: linear-gradient(white, white, white, white, white, white, transparent);
+        mask: linear-gradient(
+            white,
+            white,
+            white,
+            white,
+            white,
+            white,
+            transparent
+        );
     }
 
     .scan-actions {

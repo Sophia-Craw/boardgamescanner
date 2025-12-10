@@ -58,6 +58,7 @@
             })
 
             localStorage.setItem("wishlist", JSON.stringify(filteredStorage))
+            wishlistList.set(JSON.parse(localStorage.getItem("wishlist") || "[]"))
             isWishlist = false
             collectionList.set(JSON.parse(localStorage.getItem("collection") || "[]"))
             isOwned = true
