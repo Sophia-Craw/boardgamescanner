@@ -10,7 +10,7 @@
 
 	let collectionArray: Array<GameObject> = $state([]);
 
-	onMount(() => {
+	$effect(() => {
 		if (localStorage) {
 
 			let colList: Array<GameObject> = JSON.parse(localStorage.getItem("collection") || "[]") || []
