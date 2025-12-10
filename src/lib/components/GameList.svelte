@@ -79,6 +79,8 @@
 
     .tab {
         padding: 10px;
+        padding-left: 16px;
+        padding-right: 16px;
         padding-left: 10px;
         padding-right: 10px;
         border: none;
@@ -90,9 +92,9 @@
     }
 
     .tab-select {
-        padding: 5px;
-        padding-left: 10px;
-        padding-right: 10px;
+        padding: 10px;
+        padding-left: 16px;
+        padding-right: 16px;
         border: none;
         border-radius: 12px;
         background-color: rgb(255, 255, 255);
