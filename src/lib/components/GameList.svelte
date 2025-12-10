@@ -201,6 +201,7 @@
         border: none;
         outline: none;
         color: white;
+        width: 100%;
     }
 
     .search-bar {
