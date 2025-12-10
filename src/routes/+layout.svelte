@@ -12,12 +12,32 @@
 
 	onMount(() => {
 		if (localStorage) {
-			collectionList.set(
-				JSON.parse(localStorage.getItem("collection") || "[]") || [],
-			);
-			wishlistList.set(
-				JSON.parse(localStorage.getItem("wishlist") || "[]") || [],
-			);
+
+			let colList: Array<GameObject> = JSON.parse(localStorage.getItem("collection") || "[]") || []
+			let wisList: Array<GameObject> = JSON.parse(localStorage.getItem("wishlist") || "[]") || []
+
+			colList.sort((a, b) => {
+				if (a.name < b.name) {
+					return -1
+				}
+				if (a.name > b.name) {
+					return 1
+				}
+				return 0
+			})
+
+			wisList.sort((a, b) => {
+				if (a.name < b.name) {
+					return -1
+				}
+				if (a.name > b.name) {
+					return 1
+				}
+				return 0
+			})
+
+			collectionList.set(colList);
+			wishlistList.set(wisList);
 		}
 
 		collectionList.subscribe((list) => {
