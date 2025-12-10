@@ -16,7 +16,7 @@
 				JSON.parse(localStorage.getItem("collection") || "[]") || [],
 			);
 			wishlistList.set(
-				JSON.parse(localStorage.getItem("collection") || "[]") || [],
+				JSON.parse(localStorage.getItem("wishlist") || "[]") || [],
 			);
 		}
 

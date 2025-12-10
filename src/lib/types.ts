@@ -1,6 +1,7 @@
 export type GameObject = {
     name: string,
     published: number,
+    upc: number,
     bgg_info: [
         {
             name: string,
