@@ -83,7 +83,7 @@
         padding-right: 10px;
         border: none;
         border-radius: 12px;
-        background-color: rgb(24, 24, 24);
+        background-color: rgb(33, 33, 33);
         color: white;
         font-family: sans-serif;
         font-weight: 800;
