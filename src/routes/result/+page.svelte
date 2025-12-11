@@ -41,28 +41,29 @@
 
             gameData.then((g) => {
                 data = g as GameObject
-            })
-        })
 
-        if (localStorage) {
-            let storage: Array<GameObject> = JSON.parse(localStorage.getItem("collection") || "[]") || []
-            let wishlistStorage: Array<GameObject> = JSON.parse(localStorage.getItem("wishlist") || "[]") || []
 
-            wishlistStorage.forEach(game => {
-                if (game.bgg_info[0].id === data.bgg_info[0].id) {
-                    isWishlist = true
-                }
-            })
-            
-            storage.forEach(game => {
-                if (game.bgg_info[0].id === data.bgg_info[0].id) {
-                    isOwned = true
+                if (localStorage) {
+                    let storage: Array<GameObject> = JSON.parse(localStorage.getItem("collection") || "[]") || []
+                    let wishlistStorage: Array<GameObject> = JSON.parse(localStorage.getItem("wishlist") || "[]") || []
+
+                    wishlistStorage.forEach(game => {
+                        if (game.bgg_info[0].id === data.bgg_info[0].id) {
+                            isWishlist = true
+                        }
+                    })
+                    
+                    storage.forEach(game => {
+                        if (game.bgg_info[0].id === data.bgg_info[0].id) {
+                            isOwned = true
+                            loadingDisable = false
+                        }
+                        loadingDisable = false    
+                    })
                     loadingDisable = false
                 }
-                loadingDisable = false    
             })
-            loadingDisable = false
-        }
+        })
     })
 
     const own = () => {
