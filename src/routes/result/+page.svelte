@@ -135,9 +135,13 @@
 
 <main>
     {#if data.name === data.bgg_info[0].name}
-        <img class="game-image" src={data.bgg_info[0].image_url} alt="" />
+        {#if data.bgg_info[0].image_url === ""}
+            <div class="skeleton"></div>
+        {:else}
+            <img class="game-image" src={data.bgg_info[0].image_url} alt="" />
+        {/if}
         <h2><b>{data.name}</b></h2>
-        <p><b>{data.bgg_info[0].published}</b></p>
+        <p><b>{data.bgg_info[0].published == 0 ? "--" : data.bgg_info[0].published}</b></p>
         <div class="options">
             <button disabled={loadingDisable} class={isOwned ? "btn-owned" : ""} onclick={own}>
                 <img class="icon" src={isOwned ? CheckIcon : AddIcon} alt="" />
@@ -277,5 +281,31 @@
     .btn-alt:active {
         color: white;
         background-color: rgb(32, 32, 32);
+    }
+
+    .skeleton {
+        
+        width: 81dvw;
+        height: 40dvh;
+        border-radius: 12px;
+
+        animation-name: fadeInOut;
+        animation-duration: 1s;
+        animation-direction: alternate;
+        animation-iteration-count: infinite;
+    }
+
+    @keyframes fadeInOut {
+        0% {
+            opacity: 100%;
+        }
+
+        50% {
+            opacity: 40%;
+        }
+
+        100% {
+            opacity: 100%;
+        }
     }
 </style>
