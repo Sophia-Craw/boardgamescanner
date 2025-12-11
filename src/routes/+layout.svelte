@@ -7,12 +7,16 @@
 	import { onMount } from "svelte";
 	import { fly } from "svelte/transition";
     import ScanIcon from "$lib/assets/scan.png";
+	import { StatusBar, Style } from "@capacitor/status-bar"
 
 	let { children, data } = $props();
 
 	let collectionArray: Array<GameObject> = $state([]);
 
 	onMount(() => {
+		
+		StatusBar.setStyle({ style: Style.Dark })
+
 		if (localStorage) {
 			let colList: Array<GameObject> =
 				JSON.parse(localStorage.getItem("collection") || "[]") || [];
