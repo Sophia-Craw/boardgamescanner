@@ -24,3 +24,4 @@ vite.config.ts.timestamp-*
 
 /android
 capacitor.config.ts
+/ios
