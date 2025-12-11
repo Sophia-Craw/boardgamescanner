@@ -68,6 +68,11 @@
         <button class="btn-scan" disabled={!isDetected} onclick={scan}>
             <img src="" alt="" />
         </button>
+        <button class="btn-cancel"
+            onclick={() => {
+                goto("/")
+            }}
+        >Cancel</button>
     </div>
 </main>
 
@@ -88,6 +93,8 @@
     .scan-actions {
         padding: 100px;
         display: flex;
+        flex-direction: column;
+        gap: 40px;
         justify-content: center;
     }
 
@@ -102,6 +109,8 @@
         height: 30px;
         border-radius: 100px;
         transition: 0.08s;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .btn-scan:active {
@@ -111,5 +120,20 @@
 
     .btn-scan:disabled {
         opacity: 50%;
+    }
+
+    .btn-cancel {
+        background-color: rgb(45, 45, 45);
+        color: rgb(252, 44, 79);
+        border: none;
+        padding: 12px;
+        font-weight: 800;
+        border-radius: 12px;
+        transition: 0.08s;
+    }
+
+    .btn-cancel:active {
+        scale: 95%;
+        opacity: 60%;
     }
 </style>
