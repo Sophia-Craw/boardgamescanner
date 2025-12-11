@@ -284,7 +284,7 @@
     }
 
     .skeleton {
-        
+        background-color: rgb(54, 54, 54);
         width: 81dvw;
         height: 40dvh;
         border-radius: 12px;
