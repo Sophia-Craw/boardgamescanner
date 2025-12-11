@@ -82,7 +82,6 @@
 	</div>	
 {/if}
 
-
 <style>
 	:root {
 		background-color: rgb(0, 0, 0);
@@ -95,6 +94,7 @@
 		right: 0;
 		position: sticky;
 		padding: 20px;
+		padding-top: 60px;
 		border-bottom-style: solid;
 		border-width: 1px;
 		border-color: rgba(255, 255, 255, 0.09);
@@ -159,5 +159,48 @@
         padding-left: 0px;
         font-weight: 800;
 		color: black;
+    }
+
+    .bottom-nav {
+        display: flex;
+        justify-content: center;
+        padding: 40px;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+
+    .icon-scan {
+        width: 30px;
+        height: 30px;
+        object-fit: contain;
+        vertical-align: middle;
+    }
+
+    .btn-scan {
+        padding: 12px;
+        /* padding-left: 16px;
+        padding-right: 16px; */
+        border: none;
+        border-radius: 20px;
+        background-color: rgb(255, 255, 255);
+        transition: 0.04s;
+        display: flex;
+        gap: 15px;
+        color: black;
+    }
+
+    .btn-scan:active {
+        scale: 95%;
+        background-color: rgb(189, 189, 189);
+    }
+
+    .label-scan {
+        margin: 0;
+        font-size: 1rem;
+        padding: 5px;
+        padding-left: 0px;
+        font-weight: 800;
     }
 </style>

@@ -57,7 +57,7 @@
 
     const scan = () => {
         if (isDetected && upcCode) {
-            goto("/result/" + upcCode);
+            goto("/result?upc=" + upcCode);
         }
     };
 </script>

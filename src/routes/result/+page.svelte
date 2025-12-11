@@ -1,7 +1,19 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
 
-    const { data } = $props();
+    let data: GameObject = $state({
+        name: "",
+        published: 0,
+        upc: 0,
+        bgg_info: [
+            {
+                name: "",
+                published: 0,
+                id: 0,
+                image_url: ""
+            }
+        ]
+    });
 
     import HeartIcon from "$lib/assets/heart.png";
     import HeartIconOutline from "$lib/assets/heart_outline.png"
@@ -11,6 +23,7 @@
     import type { GameObject } from "$lib/types.js";
     import { onMount } from "svelte";
     import { collectionList, wishlistList } from "$lib/stores.js";
+    import { page } from "$app/state";
 
     let isOwned: boolean = $state(false)
     let isWishlist: boolean = $state(false)
@@ -18,6 +31,19 @@
     let loadingDisable = $state(true)
 
     onMount(() => {
+
+        fetch("https://api.gameupc.com/test/upc/" + page.url.searchParams.get("upc"), {
+            headers: {
+                "X-Api-Key": "test_test_test_test_test"
+            }
+        }).then((resp) => {
+            const gameData = resp.json()
+
+            gameData.then((g) => {
+                data = g as GameObject
+            })
+        })
+
         if (localStorage) {
             let storage: Array<GameObject> = JSON.parse(localStorage.getItem("collection") || "[]") || []
             let wishlistStorage: Array<GameObject> = JSON.parse(localStorage.getItem("wishlist") || "[]") || []

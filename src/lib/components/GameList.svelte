@@ -41,7 +41,7 @@
     </div>
     {#each view === "collection" ? games : wishlist as game}
         {#if game.name === searchTerm || game.name.includes(searchTerm) || game.published === parseInt(searchTerm)}
-            <a href="/result/{game.upc}">
+            <a href="/result?upc={game.upc}">
                 <div class="game">
                     <div class="info-wrapper">
                         <div class="thumbnail-wrapper">
