@@ -99,7 +99,7 @@
             </div>
         </div>
     {/if}
-    <div class={dispStyle === 1 ? "games-large" : "games"}>
+    <div class={controls && dispStyle === 1 ? "games-large" : "games"}>
         {#each view === "collection" ? games : wishlist as game, index}
             {#if game.name === searchTerm || game.name.includes(searchTerm) || game.published === parseInt(searchTerm)}
                 <a
