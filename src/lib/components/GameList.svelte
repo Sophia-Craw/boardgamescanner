@@ -174,7 +174,9 @@
         display: flex;
         flex-direction: column;
         overflow-y: scroll;
-        padding-bottom: 60px;
+        height: 58dvh;
+        padding-bottom: 200px;
+        mask: linear-gradient(white, white, white, white, transparent);
     }
 
     .games-large {
@@ -184,7 +186,9 @@
         justify-content: center;
         flex-wrap: wrap;
         overflow-y: scroll;
-        padding-bottom: 60px;
+        height: 58dvh;
+        padding-bottom: 200px;
+        mask: linear-gradient(white, white, white, white, transparent);
     }
 
     .search-bar {

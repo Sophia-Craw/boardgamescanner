@@ -94,9 +94,8 @@
 		--color-buttons: white;
 
 		background-color: var(--color-primary);
-		overflow: hidden;
 	}
-
+	
 	@media (prefers-color-scheme: light) {
 		:global(:root) {
 			--color-primary: #FFFFFF;
