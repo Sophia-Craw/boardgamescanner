@@ -24,11 +24,10 @@
     import ScanIcon from "$lib/assets/scan.png";
     import CheckIcon from "$lib/assets/check.png";
     import type { GameObject, SingleGame } from "$lib/types.js";
-    import { onMount } from "svelte";
     import { collectionList, wishlistList } from "$lib/stores.js";
     import { page } from "$app/state";
     import GameList from "$lib/components/GameList.svelte";
-    import { fade, fly } from "svelte/transition";
+    import { fly } from "svelte/transition";
 
     let isOwned: boolean = $state(false);
     let isWishlist: boolean = $state(false);

@@ -2,18 +2,30 @@
     const { games, controls } = $props();
 
     import RightArrow from "$lib/assets/right-arrow.png";
-    import { wishlistList } from "$lib/stores";
+    import { displayStyle, wishlistList } from "$lib/stores";
     import type { GameObject } from "$lib/types";
     import SearchIcon from "$lib/assets/magnifying-glass.png";
     import { page } from "$app/state";
+    import ListIcon from "$lib/assets/view-list.png";
+    import IconsIcon from "$lib/assets/menu.png";
 
     let wishlist: Array<GameObject> = $state([]);
     let searchTerm: string = $state("");
+
+    let dispStyle: number = $state(0);
 
     $effect(() => {
         wishlistList.subscribe((list) => {
             wishlist = list;
         });
+
+        displayStyle.subscribe((n) => {
+            dispStyle = n;
+        });
+
+        if (localStorage) {
+            displayStyle.set(parseInt(localStorage.getItem("lastView") || "0"))
+        }
     });
 
     let view: string = $state("collection");
@@ -32,48 +44,102 @@
                 />
             </div>
             <div class="tabs">
-                <button
-                    class={view == "collection" ? "tab-select" : "tab"}
-                    onclick={() => {
-                        view = "collection";
-                    }}>Collection</button
-                >
-                <button
-                    class={view == "wishlist" ? "tab-select" : "tab"}
-                    onclick={() => {
-                        view = "wishlist";
-                    }}>Wishlist</button
-                >
+                <div class="category-tab-group">
+                    <button
+                        class={view == "collection" ? "tab-select" : "tab"}
+                        onclick={() => {
+                            view = "collection";
+                        }}>Collection</button
+                    >
+                    <button
+                        class={view == "wishlist" ? "tab-select" : "tab"}
+                        onclick={() => {
+                            view = "wishlist";
+                        }}>Wishlist</button
+                    >
+                </div>
+                <div class="displayview-tab-group">
+                    <button
+                        aria-label="list"
+                        class={dispStyle === 0 ? "tab-select" : "tab"}
+                        onclick={() => {
+                            displayStyle.set(0);
+                            if (localStorage) {
+                                localStorage.setItem("lastView", "0")
+                            }
+                        }}
+                    >
+                        <img
+                            class={dispStyle === 0
+                                ? "view-icon-select"
+                                : "view-icon"}
+                            src={ListIcon}
+                            alt=""
+                        />
+                    </button>
+                    <button
+                        aria-label="icons"
+                        class={dispStyle === 1 ? "tab-select" : "tab"}
+                        onclick={() => {
+                            displayStyle.set(1);
+                            if (localStorage) {
+                                localStorage.setItem("lastView", "1")
+                            }
+                        }}
+                    >
+                        <img
+                            class={dispStyle === 1
+                                ? "view-icon-select"
+                                : "view-icon"}
+                            src={IconsIcon}
+                            alt=""
+                        />
+                    </button>
+                </div>
             </div>
         </div>
     {/if}
-    {#each view === "collection" ? games : wishlist as game, index}
-        {#if game.name === searchTerm || game.name.includes(searchTerm) || game.published === parseInt(searchTerm)}
-            <a href={`/result?upc=${!controls ? page.url.searchParams.get("upc") : game.upc}&index=${!controls ? index : game.index}`}>
-                <!-- <p>{game}</p> -->
-                <div class="game">
-                    <div class="info-wrapper">
-                        <div class="thumbnail-wrapper">
-                            <img
-                                class="thumbnail"
-                                src={game.image_url}
-                                alt=""
-                            />
+    <div class={dispStyle === 1 ? "games-large" : "games"}>
+        {#each view === "collection" ? games : wishlist as game, index}
+            {#if game.name === searchTerm || game.name.includes(searchTerm) || game.published === parseInt(searchTerm)}
+                <a
+                    href={`/result?upc=${!controls ? page.url.searchParams.get("upc") : game.upc}&index=${!controls ? index : game.index}`}
+                >
+                    <!-- <p>{game}</p> -->
+                    <div class={dispStyle === 1 ? "game-big" : "game"}>
+                        <div class="info-wrapper">
+                            <div class="thumbnail-wrapper">
+                                <img
+                                    class={dispStyle === 1
+                                        ? "thumbnail-big"
+                                        : "thumbnail"}
+                                    src={game.image_url}
+                                    alt=""
+                                />
+                            </div>
+                            <div
+                                class={dispStyle === 1
+                                    ? "game-info-hidden"
+                                    : "game-info"}
+                            >
+                                <p class="title">{game.name}</p>
+                                <p class="year">
+                                    {game.published}
+                                </p>
+                            </div>
                         </div>
-                        <div class="game-info">
-                            <p class="title">{game.name}</p>
-                            <p class="year">
-                                {game.published}
-                            </p>
+                        <div
+                            class={dispStyle === 1
+                                ? "arrow-wrapper-hidden"
+                                : "arrow-wrapper"}
+                        >
+                            <img class="icon" src={RightArrow} alt="" />
                         </div>
                     </div>
-                    <div class="arrow-wrapper">
-                        <img class="icon" src={RightArrow} alt="" />
-                    </div>
-                </div>
-            </a>
-        {/if}
-    {/each}
+                </a>
+            {/if}
+        {/each}
+    </div>
     {#if games.length > 0}{:else}
         <p>No games yet.</p>
     {/if}
@@ -99,6 +165,18 @@
         color: var(--color-accent);
     }
 
+    .games {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .games-large {
+        display: flex;
+        gap: 12px;
+        padding: 12px;
+        justify-content: center;
+    }
+
     .search-bar {
         display: flex;
         gap: 12px;
@@ -110,6 +188,17 @@
     .tabs {
         display: flex;
         gap: 12px;
+        justify-content: space-between;
+    }
+
+    .category-tab-group {
+        display: flex;
+        gap: 12px;
+    }
+
+    .displayview-tab-group {
+        display: flex;
+        gap: 5px;
     }
 
     .tab {
@@ -169,11 +258,32 @@
         text-align: left;
     }
 
+    .game-info-hidden {
+        display: none;
+    }
+
+    .arrow-wrapper-hidden {
+        display: none;
+    }
+
     .thumbnail {
         width: 40px;
         height: 40px;
         border-radius: 12px;
         border-radius: 12px;
+    }
+
+    .thumbnail-big {
+        width: 45dvw;
+        height: 45dvw;
+        border-radius: 12px;
+        border-radius: 12px;
+        transition: 0.08s;
+    }
+
+    .thumbnail-big:active {
+        scale: 95%;
+        opacity: 60%;
     }
 
     p {
@@ -199,6 +309,30 @@
         filter: invert() opacity(50%);
         position: relative;
         top: 14px;
+    }
+
+    .view-icon {
+        width: 16px;
+        height: 16px;
+        filter: invert();
+        position: relative;
+    }
+
+    .view-icon-select {
+        width: 16px;
+        height: 16px;
+        filter: invert(0);
+        position: relative;
+    }
+
+    @media (prefers-color-scheme: light) {
+        .view-icon {
+            filter: invert(0);
+        }
+        
+        .view-icon-select {
+            filter: invert();
+        }
     }
 
     .search-icon {

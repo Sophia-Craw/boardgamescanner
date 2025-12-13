@@ -69,7 +69,7 @@
 {/key}
 
 {#if data.url === "/"}
-	<div class="bottom-nav" data-sveltekit-noscroll>
+	<div class="bottom-nav" in:fly={{y: 200, duration: 200}} out:fly={{y: 200, duration: 200}} data-sveltekit-noscroll>
 		<button data-sveltekit-noscroll
 			class="btn-scan"
 			onclick={() => {
@@ -100,12 +100,12 @@
 	@media (prefers-color-scheme: light) {
 		:global(:root) {
 			--color-primary: #FFFFFF;
-			--color-mid: rgba(218, 218, 218, 0.8);
+			--color-mid: rgba(238, 236, 236, 0.8);
 			--color-accent: rgb(0, 0, 0);
 			--color-sub: rgba(25, 25, 25, 0.344);
 			--color-innertext: rgb(0, 0, 0);
 			--invert-value: 0;
-			--scan-button: rgba(218, 218, 218, 0.8);
+			--scan-button: rgba(225, 223, 223, 0.8);
 			--color-buttons: rgb(236, 236, 236)
 		}
 	}
