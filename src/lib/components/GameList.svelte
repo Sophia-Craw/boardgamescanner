@@ -151,6 +151,11 @@
         flex-direction: column;
         gap: 12px;
         padding: 12px;
+        position: sticky;
+        top: 0;
+        left: 0;
+        right: 0;
+        padding: 12px;
     }
 
     .game {
@@ -168,6 +173,8 @@
     .games {
         display: flex;
         flex-direction: column;
+        overflow-y: scroll;
+        padding-bottom: 60px;
     }
 
     .games-large {
@@ -176,6 +183,8 @@
         padding: 12px;
         justify-content: center;
         flex-wrap: wrap;
+        overflow-y: scroll;
+        padding-bottom: 60px;
     }
 
     .search-bar {
