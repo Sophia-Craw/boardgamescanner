@@ -106,11 +106,11 @@
                     href={`/result?upc=${!controls ? page.url.searchParams.get("upc") : game.upc}&index=${!controls ? index : game.index}`}
                 >
                     <!-- <p>{game}</p> -->
-                    <div class={dispStyle === 1 ? "game-big" : "game"}>
+                    <div class={controls && dispStyle === 1 ? "game-big" : "game"}>
                         <div class="info-wrapper">
                             <div class="thumbnail-wrapper">
                                 <img
-                                    class={dispStyle === 1
+                                    class={controls && dispStyle === 1
                                         ? "thumbnail-big"
                                         : "thumbnail"}
                                     src={game.image_url}
@@ -118,7 +118,7 @@
                                 />
                             </div>
                             <div
-                                class={dispStyle === 1
+                                class={controls && dispStyle === 1
                                     ? "game-info-hidden"
                                     : "game-info"}
                             >
@@ -129,7 +129,7 @@
                             </div>
                         </div>
                         <div
-                            class={dispStyle === 1
+                            class={controls && dispStyle === 1
                                 ? "arrow-wrapper-hidden"
                                 : "arrow-wrapper"}
                         >
@@ -175,6 +175,7 @@
         gap: 12px;
         padding: 12px;
         justify-content: center;
+        flex-wrap: wrap;
     }
 
     .search-bar {
