@@ -7,16 +7,12 @@
 	import { onMount } from "svelte";
 	import { fly } from "svelte/transition";
     import ScanIcon from "$lib/assets/scan.png";
-	import { StatusBar, Style } from "@capacitor/status-bar"
 
 	let { children, data } = $props();
 
 	let collectionArray: Array<GameObject> = $state([]);
 
 	onMount(() => {
-		
-		StatusBar.setStyle({ style: Style.Dark })
-
 		if (localStorage) {
 			let colList: Array<GameObject> =
 				JSON.parse(localStorage.getItem("collection") || "[]") || [];
@@ -87,9 +83,31 @@
 {/if}
 
 <style>
-	:root {
-		background-color: rgb(0, 0, 0);
+	:global(:root) {
+		--color-primary: #000000;
+		--color-mid: rgba(51, 51, 51, 0.342);
+		--color-accent: white;
+		--color-sub: rgba(255, 255, 255, 0.344);
+		--color-innertext: black;
+		--invert-value: 1;
+		--scan-button: white;
+		--color-buttons: white;
+
+		background-color: var(--color-primary);
 		overflow: hidden;
+	}
+
+	@media (prefers-color-scheme: light) {
+		:global(:root) {
+			--color-primary: #FFFFFF;
+			--color-mid: rgba(218, 218, 218, 0.8);
+			--color-accent: rgb(0, 0, 0);
+			--color-sub: rgba(25, 25, 25, 0.344);
+			--color-innertext: rgb(0, 0, 0);
+			--invert-value: 0;
+			--scan-button: rgba(218, 218, 218, 0.8);
+			--color-buttons: rgb(236, 236, 236)
+		}
 	}
 
 	.tab-nav {
@@ -102,21 +120,21 @@
 		border-bottom-style: solid;
 		border-width: 1px;
 		border-color: rgba(255, 255, 255, 0.09);
-		background-color: rgba(29, 29, 29, 0.342);
+		background-color: var(--color-mid);
 		backdrop-filter: blur(20px);
 	}
 
 	h2 {
 		margin: 0;
 		font-size: 1.5rem;
-		color: white;
+		color: var(--color-accent);
 		font-weight: 900;
 		font-family: sans-serif;
 	}
 
 	p {
 		margin: 0;
-		color: rgba(255, 255, 255, 0.344);
+		color: var(--color-sub);
 		font-family: sans-serif;
 		font-weight: 800;
 	}
@@ -144,16 +162,16 @@
         padding-right: 16px; */
         border: none;
         border-radius: 20px;
-        background-color: rgb(255, 255, 255);
+        background-color: var(--color-accent);
         transition: 0.04s;
         display: flex;
         gap: 15px;
-        color: black;
+        color: var(--color-primary);
     }
 
     .btn-scan:active {
         scale: 95%;
-        background-color: rgb(189, 189, 189);
+        opacity: 60%;
     }
 
     .label-scan {
@@ -162,7 +180,7 @@
         padding: 5px;
         padding-left: 0px;
         font-weight: 800;
-		color: black;
+		color: var(--color-innertext);
     }
 
     .bottom-nav {
@@ -188,7 +206,7 @@
         padding-right: 16px; */
         border: none;
         border-radius: 20px;
-        background-color: rgb(255, 255, 255);
+        background-color: var(--scan-button);
         transition: 0.04s;
         display: flex;
         gap: 15px;
@@ -197,7 +215,7 @@
 
     .btn-scan:active {
         scale: 95%;
-        background-color: rgb(189, 189, 189);
+       	opacity: 60%;
     }
 
     .label-scan {

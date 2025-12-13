@@ -1,66 +1,77 @@
 <script lang="ts">
-    const { games } = $props();
+    const { games, controls } = $props();
 
     import RightArrow from "$lib/assets/right-arrow.png";
     import { wishlistList } from "$lib/stores";
     import type { GameObject } from "$lib/types";
-    import SearchIcon from "$lib/assets/magnifying-glass.png"
+    import SearchIcon from "$lib/assets/magnifying-glass.png";
+    import { page } from "$app/state";
 
     let wishlist: Array<GameObject> = $state([]);
     let searchTerm: string = $state("");
 
     $effect(() => {
         wishlistList.subscribe((list) => {
-            wishlist = list
-        })
-    })
+            wishlist = list;
+        });
+    });
 
     let view: string = $state("collection");
 </script>
 
 <main>
-    <div class="control-group">
-        <div class="search-bar">
-            <img class="search-icon" src={SearchIcon} alt="">
-            <input type="text" class="txt-search" placeholder="Search..." bind:value={searchTerm}>
+    {#if controls}
+        <div class="control-group">
+            <div class="search-bar">
+                <img class="search-icon" src={SearchIcon} alt="" />
+                <input
+                    type="text"
+                    class="txt-search"
+                    placeholder="Search..."
+                    bind:value={searchTerm}
+                />
+            </div>
+            <div class="tabs">
+                <button
+                    class={view == "collection" ? "tab-select" : "tab"}
+                    onclick={() => {
+                        view = "collection";
+                    }}>Collection</button
+                >
+                <button
+                    class={view == "wishlist" ? "tab-select" : "tab"}
+                    onclick={() => {
+                        view = "wishlist";
+                    }}>Wishlist</button
+                >
+            </div>
         </div>
-        <div class="tabs">
-            <button
-                class={view == "collection" ? "tab-select" : "tab"}
-                onclick={() => {
-                    view = "collection";
-                }}>Collection</button
-            >
-            <button
-                class={view == "wishlist" ? "tab-select" : "tab"}
-                onclick={() => {
-                    view = "wishlist";
-                }}>Wishlist</button
-            >
-        </div>
-    </div>
-    {#each view === "collection" ? games : wishlist as game}
+    {/if}
+    {#each view === "collection" ? games : wishlist as game, index}
         {#if game.name === searchTerm || game.name.includes(searchTerm) || game.published === parseInt(searchTerm)}
-            <a href="/result?upc={game.upc}">
+            <a href={`/result?upc=${!controls ? page.url.searchParams.get("upc") : game.upc}&index=${!controls ? index : game.index}`}>
+                <!-- <p>{game}</p> -->
                 <div class="game">
                     <div class="info-wrapper">
                         <div class="thumbnail-wrapper">
                             <img
                                 class="thumbnail"
-                                src={game.bgg_info[0].image_url}
+                                src={game.image_url}
                                 alt=""
                             />
                         </div>
                         <div class="game-info">
                             <p class="title">{game.name}</p>
-                            <p class="year">{game.bgg_info[0].published}</p>
+                            <p class="year">
+                                {game.published}
+                            </p>
                         </div>
                     </div>
                     <div class="arrow-wrapper">
                         <img class="icon" src={RightArrow} alt="" />
                     </div>
                 </div>
-            </a>           
+            </a>
         {/if}
     {/each}
     {#if games.length > 0}{:else}
@@ -83,15 +94,16 @@
         padding: 12px;
         border-bottom-style: solid;
         border-width: 1px;
-        border-color: rgba(255, 255, 255, 0.088);
+        border-color: var(--color-mid);
         transition: 0.08s;
+        color: var(--color-accent);
     }
 
     .search-bar {
         display: flex;
         gap: 12px;
         padding: 10px;
-        background-color: rgb(27, 27, 27);
+        background-color: var(--color-mid);
         border-radius: 12px;
     }
 
@@ -106,8 +118,8 @@
         padding-right: 16px;
         border: none;
         border-radius: 12px;
-        background-color: rgb(27, 27, 27);
-        color: white;
+        background-color: var(--color-mid);
+        color: var(--color-accent);
         font-family: sans-serif;
         font-weight: 800;
         transition: 0.08s;
@@ -124,8 +136,8 @@
         padding-right: 16px;
         border: none;
         border-radius: 12px;
-        background-color: rgb(255, 255, 255);
-        color: rgb(0, 0, 0);
+        background-color: var(--color-accent);
+        color: var(--color-primary);
         font-family: sans-serif;
         font-weight: 800;
         transition: 0.08s;
@@ -141,18 +153,20 @@
     }
 
     .game:active {
-        background-color: rgb(37, 37, 37);
+        opacity: 60%;
     }
 
     .info-wrapper {
         display: flex;
         gap: 12px;
+        color: var(--color-accent);
     }
 
     .game-info {
         display: flex;
         flex-direction: column;
         padding: 4px;
+        text-align: left;
     }
 
     .thumbnail {
@@ -167,14 +181,14 @@
     }
 
     .title {
-        color: white;
+        color: var(--color-accent);
         font-family: sans-serif;
         font-size: 1rem;
         font-weight: 800;
     }
 
     .year {
-        color: rgba(255, 255, 255, 0.27);
+        color: var(--color-sub);
         font-family: sans-serif;
         font-size: 1rem;
     }
@@ -196,11 +210,17 @@
         transition: 0.08s;
     }
 
+    @media (prefers-color-scheme: light) {
+        .search-icon {
+            filter: invert(0);
+        }
+    }
+
     .txt-search {
         background-color: transparent;
         border: none;
         outline: none;
-        color: white;
+        color: var(--color-accent);
         width: 100%;
     }
 

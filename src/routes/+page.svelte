@@ -1,6 +1,4 @@
 <script lang="ts">
-    import { goto } from "$app/navigation";
-    import ScanIcon from "$lib/assets/scan.png";
     import GameList from "$lib/components/GameList.svelte";
     import { collectionList } from "$lib/stores";
     import type { GameObject } from "$lib/types";
@@ -14,7 +12,7 @@
 
 <main>
 	<div class="game-list">
-		<GameList games={collectionArray} />
+		<GameList games={collectionArray} controls={true} />
 	</div>
 </main>
 

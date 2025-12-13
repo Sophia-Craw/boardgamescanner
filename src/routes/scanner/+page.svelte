@@ -1,6 +1,5 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
-    import { page } from "$app/state";
     import Quagga from "@ericblade/quagga2";
     import { onMount } from "svelte";
 
@@ -8,6 +7,7 @@
 
     let isDetected: boolean = $state(false);
     let upcCode: string = $state("");
+    let strm: MediaStream;
 
     $effect(() => {
         navigator.mediaDevices
@@ -19,6 +19,7 @@
             })
             .then((stream) => {
                 video.srcObject = stream;
+                strm = stream;
                 video.play();
             });
     });
@@ -57,7 +58,13 @@
 
     const scan = () => {
         if (isDetected && upcCode) {
-            goto("/result?upc=" + upcCode);
+            let tracks = strm.getTracks();
+
+            tracks.forEach((t) => {
+                t.stop();
+                video.pause();
+                goto("/result?upc=" + upcCode);
+            });
         }
     };
 </script>
@@ -68,11 +75,23 @@
         <button class="btn-scan" disabled={!isDetected} onclick={scan}>
             <img src="" alt="" />
         </button>
-        <button class="btn-cancel"
+        <button
+            class="btn-cancel"
             onclick={() => {
-                goto("/")
-            }}
-        >Cancel</button>
+                let tracks = strm.getTracks();
+
+                if (tracks.length > 0) {
+                    tracks.forEach((t) => {
+                        t.stop();
+                        video.pause();
+                        goto("/");
+                    });
+                } else {
+                    goto("/"); 
+                }
+
+            }}>Cancel</button
+        >
     </div>
 </main>
 
