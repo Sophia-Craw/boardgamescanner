@@ -61,7 +61,7 @@
 		{#if page.url.pathname === "/"}
 			<div class="tab-nav">
 				<h2>Your Collection</h2>
-				<p>Games: {collectionArray.length}</p>
+				<p>Games Owned: {collectionArray.length}</p>
 			</div>
 		{/if}
 		{@render children()}
