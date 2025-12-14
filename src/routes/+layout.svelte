@@ -4,7 +4,6 @@
 	import favicon from "$lib/assets/favicon.svg";
 	import { collectionList, wishlistList } from "$lib/stores.js";
 	import type { GameObject } from "$lib/types";
-	import { onMount } from "svelte";
 	import { fly } from "svelte/transition";
     import ScanIcon from "$lib/assets/scan.png";
 
