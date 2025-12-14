@@ -8,6 +8,7 @@
     import { page } from "$app/state";
     import ListIcon from "$lib/assets/view-list.png";
     import IconsIcon from "$lib/assets/menu.png";
+    
 
     let wishlist: Array<GameObject> = $state([]);
     let searchTerm: string = $state("");
@@ -100,6 +101,7 @@
         </div>
     {/if}
     <div class={controls && dispStyle === 1 ? "games-large" : "games"}>
+        
         {#each view === "collection" ? games : wishlist as game, index}
             {#if game.name === searchTerm || game.name.includes(searchTerm) || game.published === parseInt(searchTerm)}
                 <a
@@ -170,11 +172,15 @@
         color: var(--color-accent);
     }
 
+    .game-big {
+        display: flex;
+    }
+
     .games {
         display: flex;
         flex-direction: column;
         overflow-y: scroll;
-        height: 58dvh;
+        max-height: 58dvh;
         padding-bottom: 200px;
         mask: linear-gradient(white, white, white, white, transparent);
     }
@@ -183,10 +189,9 @@
         display: flex;
         gap: 12px;
         padding: 12px;
-        justify-content: center;
         flex-wrap: wrap;
         overflow-y: scroll;
-        height: 58dvh;
+        max-height: 58dvh;
         padding-bottom: 200px;
         mask: linear-gradient(white, white, white, white, transparent);
     }

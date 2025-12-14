@@ -11,9 +11,9 @@
 	let { children, data } = $props();
 
 	let collectionArray: Array<GameObject> = $state([]);
-
-	onMount(() => {
-		if (localStorage) {
+	
+	$effect(() => {
+		if (localStorage.getItem("wishlist") && localStorage.getItem("collection")) {
 			let colList: Array<GameObject> =
 				JSON.parse(localStorage.getItem("collection") || "[]") || [];
 			let wisList: Array<GameObject> =
@@ -95,7 +95,7 @@
 
 		background-color: var(--color-primary);
 	}
-	
+
 	@media (prefers-color-scheme: light) {
 		:global(:root) {
 			--color-primary: #FFFFFF;

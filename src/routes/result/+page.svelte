@@ -437,7 +437,7 @@
         outline: none;
         border-radius: 20px;
         z-index: 7;
-        overflow: scroll;
+        /* overflow: scroll; */
         position: fixed;
         bottom: 0;
         left: 0;
