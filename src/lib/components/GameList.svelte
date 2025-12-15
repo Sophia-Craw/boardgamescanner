@@ -234,6 +234,10 @@
 </main>
 
 <style>
+    main {
+        padding-bottom: 40px;
+    }
+
     .control-group {
         display: flex;
         flex-direction: column;
@@ -377,6 +381,7 @@
         border-radius: 12px;
         border-radius: 12px;
         object-fit: cover;
+        object-position: top;
     }
 
     .thumbnail-big {
@@ -386,6 +391,7 @@
         border-radius: 12px;
         transition: 0.08s;
         object-fit: cover;
+        object-position: top;
     }
 
     .thumbnail-big:active {
@@ -477,6 +483,7 @@
 
     a {
         text-decoration: none;
+        -webkit-tap-highlight-color: transparent;
     }
 
     .dialog-heading {
