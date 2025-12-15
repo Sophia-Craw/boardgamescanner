@@ -231,9 +231,6 @@
             {/if}
         {/each}
     </div>
-    {#if games.length <= 0}{:else}
-        <p class="no-games-text">No games.</p>
-    {/if}
 </main>
 
 <style>
@@ -272,11 +269,6 @@
         max-height: 58dvh;
         padding-bottom: 200px;
         mask: linear-gradient(white, white, white, white, transparent);
-    }
-
-    .no-games-text {
-        color: var(--color-sub);
-        text-align: center;
     }
 
     .games-large {
@@ -384,6 +376,7 @@
         height: 40px;
         border-radius: 12px;
         border-radius: 12px;
+        object-fit: cover;
     }
 
     .thumbnail-big {
@@ -392,6 +385,7 @@
         border-radius: 12px;
         border-radius: 12px;
         transition: 0.08s;
+        object-fit: cover;
     }
 
     .thumbnail-big:active {
