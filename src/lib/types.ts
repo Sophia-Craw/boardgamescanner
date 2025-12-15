@@ -1,9 +1,11 @@
 export type GameObject = {
+    stars?: number,
     name: string,
     published: number,
     upc: number,
     bgg_info: [
         {
+            stars?: number,
             name: string,
             published: number,
             id: number,
@@ -16,6 +18,7 @@ export type GameObject = {
 
 export type SingleGame = {
     index: number,
+    stars?: number,
     name: string,
     published: number,
     id: number,

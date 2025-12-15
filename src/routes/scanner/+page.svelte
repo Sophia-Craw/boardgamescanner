@@ -96,6 +96,11 @@
 </main>
 
 <style>
+    main {
+        background-color: black;
+        height: 100dvh;
+    }
+
     video {
         width: 100dvw;
         mask: linear-gradient(

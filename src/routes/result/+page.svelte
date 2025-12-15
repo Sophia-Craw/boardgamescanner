@@ -6,6 +6,7 @@
         published: 0,
         upc: 0,
         index: 0,
+        stars: 0,
         bgg_info: [
             {
                 name: "",
@@ -23,6 +24,7 @@
     import AddIcon from "$lib/assets/plus.png";
     import ScanIcon from "$lib/assets/scan.png";
     import CheckIcon from "$lib/assets/check.png";
+    import StarIcon from "$lib/assets/star.png";
     import type { GameObject, SingleGame } from "$lib/types.js";
     import { collectionList, wishlistList } from "$lib/stores.js";
     import { page } from "$app/state";
@@ -37,9 +39,9 @@
 
     let dialogOpen = $state(false);
 
+    let starCount: number = $state(0);
 
     $effect(() => {
-
         if (data.bgg_info[0].image_url === "") {
             fetch(
                 "https://api.gameupc.com/test/upc/" +
@@ -54,6 +56,7 @@
 
                 gameData.then((g) => {
                     data = g as GameObject;
+                    starCount = data.stars || 0;
                 });
             });
         }
@@ -82,6 +85,9 @@
 
             storage.forEach((game) => {
                 if (game.id === data.bgg_info[index].id) {
+                    if (game.stars) {
+                        starCount = game.stars;
+                    }
                     isOwned = true;
                     loadingDisable = false;
                 }
@@ -102,6 +108,7 @@
             let gameObject = data.bgg_info[index];
             gameObject.index = index;
             gameObject.upc = data.upc;
+            gameObject.stars = starCount;
             storage.push(gameObject);
 
             localStorage.setItem("collection", JSON.stringify(storage));
@@ -182,6 +189,26 @@
             }
         }
     };
+
+    const handleStars = (count: number) => {
+        starCount = count;
+
+        if (localStorage) {
+            let storage: Array<SingleGame> =
+                JSON.parse(localStorage.getItem("collection") || "[]") || [];
+
+            storage.forEach((game) => {
+                if (game.id === data.bgg_info[index].id) {
+                    let gameObj = game;
+
+                    gameObj.stars = count;
+
+                    localStorage.setItem("collection", JSON.stringify(storage));
+                    collectionList.set(JSON.parse(localStorage.getItem("collection") || "[]"));
+                }
+            });
+        }
+    };
 </script>
 
 <main>
@@ -210,10 +237,14 @@
         </div>
     {/if}
 
-    {#if data.bgg_info[index].image_url  === ""}
+    {#if data.bgg_info[index].image_url === ""}
         <div class="skeleton"></div>
     {:else}
-        <img class="game-image" src={data.bgg_info[index].image_url || ""} alt="" />
+        <img
+            class="game-image"
+            src={data.bgg_info[index].image_url || ""}
+            alt=""
+        />
     {/if}
 
     <h2><b>{data.bgg_info[index].name || ""}</b></h2>
@@ -224,6 +255,72 @@
                 : data.bgg_info[index].published || 0}</b
         >
     </p>
+    <div class="rating">
+        <button
+            class="star-btn"
+            onclick={() => {
+                if (starCount === 1) {
+                    handleStars(0);
+                } else {
+                    handleStars(1);
+                }
+            }}
+        >
+            <img
+                class={starCount >= 1 ? "star-fill" : "star"}
+                src={StarIcon}
+                alt=""
+            />
+        </button>
+        <button
+            class="star-btn"
+            onclick={() => {
+                handleStars(2);
+            }}
+        >
+            <img
+                class={starCount >= 2 ? "star-fill" : "star"}
+                src={StarIcon}
+                alt=""
+            />
+        </button>
+        <button
+            class="star-btn"
+            onclick={() => {
+                handleStars(3);
+            }}
+        >
+            <img
+                class={starCount >= 3 ? "star-fill" : "star"}
+                src={StarIcon}
+                alt=""
+            />
+        </button>
+        <button
+            class="star-btn"
+            onclick={() => {
+                handleStars(4);
+            }}
+        >
+            <img
+                class={starCount >= 4 ? "star-fill" : "star"}
+                src={StarIcon}
+                alt=""
+            />
+        </button>
+        <button
+            class="star-btn"
+            onclick={() => {
+                handleStars(5);
+            }}
+        >
+            <img
+                class={starCount >= 5 ? "star-fill" : "star"}
+                src={StarIcon}
+                alt=""
+            />
+        </button>
+    </div>
     <div class="options">
         <button
             disabled={loadingDisable}
@@ -280,7 +377,7 @@
         display: flex;
         justify-content: center;
         flex-direction: column;
-        gap: 20px;
+        gap: 15px;
         text-align: center;
     }
 
@@ -449,6 +546,45 @@
 
     .dialog::backdrop {
         background-color: rgba(0, 0, 0, 0.209);
+    }
+
+    .rating {
+        display: flex;
+        gap: 5px;
+        justify-content: center;
+    }
+
+    .star {
+        width: 30px;
+        height: 30px;
+        opacity: 60%;
+        filter: invert();
+    }
+
+    .star-fill {
+        width: 30px;
+        height: 30px;
+        opacity: 100%;
+        filter: invert();
+    }
+
+    @media (prefers-color-scheme: light) {
+        .star {
+            filter: invert(0);
+        }
+
+        .star-fill {
+            filter: invert(0);
+        }
+    }
+
+    .star-btn {
+        background-color: transparent;
+        padding: 0;
+    }
+
+    .star-btn:active {
+        opacity: 100%;
     }
 
     @keyframes fadeInOut {
