@@ -20,6 +20,8 @@
     let filterPickerOpen: boolean = $state(false);
     let starsFiltered = $state(0);
 
+    let view: string = $state("collection");
+
     $effect(() => {
         wishlistList.subscribe((list) => {
             wishlist = list;
@@ -32,14 +34,13 @@
         if (localStorage) {
             displayStyle.set(parseInt(localStorage.getItem("lastView") || "0"));
             starsFiltered = parseInt(localStorage.getItem("starFilter") || "0");
+            view = localStorage.getItem("view") || "collection"
         }
 
         if (starsFiltered > 0) {
             filterApplied = true
         }
     });
-
-    let view: string = $state("collection");
 </script>
 
 {#if filterPickerOpen}
@@ -78,7 +79,7 @@
                         }}
                     >
                         {#each Array(index) as _, idx}
-                            <img class="star-icon" src={StarIcon} alt="" />
+                            <img class={starsFiltered === num ? "star-icon" : "star-icon-passive"} src={StarIcon} alt="" />
                         {/each}
                     </button>
                 {/if}
@@ -115,12 +116,14 @@
                         class={view == "collection" ? "tab-select" : "tab"}
                         onclick={() => {
                             view = "collection";
+                            localStorage.setItem("view", "collection")
                         }}>Collection</button
                     >
                     <button
                         class={view == "wishlist" ? "tab-select" : "tab"}
                         onclick={() => {
                             view = "wishlist";
+                            localStorage.setItem("view", "wishlist")
                         }}>Wishlist</button
                     >
                 </div>
@@ -228,7 +231,7 @@
             {/if}
         {/each}
     </div>
-    {#if games.length > 0}{:else}
+    {#if games.length <= 0}{:else}
         <p class="no-games-text">No games.</p>
     {/if}
 </main>
@@ -492,7 +495,7 @@
         border-bottom-style: solid;
         border-width: 1px;
         border-color: var(--color-sub);
-        background-color: var(--color-primary);
+        background-color: var(--color-mid);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
         z-index: 9;
@@ -505,10 +508,10 @@
         right: 0;
         padding: 20px;
         padding-left: 12px;
-        border-bottom-style: solid;
+        border-top-style: solid;
         border-width: 1px;
         border-color: var(--color-sub);
-        background-color: var(--color-primary);
+        background-color: var(--color-midy);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
         z-index: 9;
@@ -604,9 +607,19 @@
         filter: invert();
     }
 
+    .star-icon-passive {
+        width: 30px;
+        height: 30px;
+        filter: invert() opacity(60%);
+    }
+
     @media (prefers-color-scheme: light) {
         .star-icon {
             filter: invert(0);
+        }
+
+        .star-icon-passive {
+            filter: invert(0) opacity(60%);
         }
     }
 </style>

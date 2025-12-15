@@ -80,6 +80,9 @@
             wishlistStorage.forEach((game) => {
                 if (game.id === data.bgg_info[index].id) {
                     isWishlist = true;
+                    if (game.stars) {
+                        starCount = game.stars;
+                    }
                 }
             });
 
@@ -162,6 +165,7 @@
             let gameObject = data.bgg_info[index];
             gameObject.index = index;
             gameObject.upc = data.upc;
+            gameObject.stars = starCount
             storage.push(gameObject);
 
             localStorage.setItem("wishlist", JSON.stringify(storage));
@@ -197,6 +201,9 @@
             let storage: Array<SingleGame> =
                 JSON.parse(localStorage.getItem("collection") || "[]") || [];
 
+            let wishStorage: Array<SingleGame> =
+                JSON.parse(localStorage.getItem("wishlist") || "[]") || [];
+
             storage.forEach((game) => {
                 if (game.id === data.bgg_info[index].id) {
                     let gameObj = game;
@@ -207,6 +214,17 @@
                     collectionList.set(JSON.parse(localStorage.getItem("collection") || "[]"));
                 }
             });
+
+            wishStorage.forEach((game) => {
+                if (game.id === data.bgg_info[index].id) {
+                    let gameObj = game;
+
+                    gameObj.stars = count;
+
+                    localStorage.setItem("wishlist", JSON.stringify(wishStorage));
+                    wishlistList.set(JSON.parse(localStorage.getItem("wishlist") || "[]"));
+                }
+            })
         }
     };
 </script>
@@ -507,7 +525,7 @@
         border-bottom-style: solid;
         border-width: 1px;
         border-color: var(--color-sub);
-        background-color: var(--color-primary);
+        background-color: var(--color-mid);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
         z-index: 9;
@@ -520,10 +538,10 @@
         right: 0;
         padding: 20px;
         padding-left: 12px;
-        border-bottom-style: solid;
+        border-top-style: solid;
         border-width: 1px;
         border-color: var(--color-sub);
-        background-color: var(--color-primary);
+        background-color: var(--color-midy);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
         z-index: 9;
