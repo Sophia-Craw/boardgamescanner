@@ -234,9 +234,9 @@
 </main>
 
 <style>
-    main {
+    /* main {
         padding-bottom: 40px;
-    }
+    } */
 
     .control-group {
         display: flex;
@@ -270,8 +270,8 @@
         display: flex;
         flex-direction: column;
         overflow-y: scroll;
-        max-height: 58dvh;
-        padding-bottom: 200px;
+        max-height: 42dvh;
+        padding-bottom: 20px;
         mask: linear-gradient(white, white, white, white, transparent);
     }
 
@@ -281,7 +281,7 @@
         padding: 12px;
         flex-wrap: wrap;
         overflow-y: scroll;
-        max-height: 58dvh;
+        max-height: 42dvh;
         padding-bottom: 200px;
         mask: linear-gradient(white, white, white, white, transparent);
     }

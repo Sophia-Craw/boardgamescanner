@@ -96,6 +96,11 @@
 </main>
 
 <style>
+
+    :root {
+        overflow: hidden;
+    }
+
     main {
         background-color: black;
         height: 100dvh;

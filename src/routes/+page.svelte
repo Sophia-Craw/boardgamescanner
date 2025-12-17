@@ -22,6 +22,11 @@
 </main>
 
 <style>
+
+    :root {
+        overflow: hidden;
+    }
+
 	.game-list {
 		display: flex;
 		flex-direction: column;

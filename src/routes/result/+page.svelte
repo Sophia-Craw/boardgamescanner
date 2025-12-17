@@ -389,6 +389,12 @@
 </main>
 
 <style>
+
+    :root {
+        overflow-y: scroll;
+        padding-bottom: 40px;
+    }
+
     main {
         padding: 40px;
         padding-top: 60px;
