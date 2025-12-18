@@ -328,7 +328,7 @@
 	.save-button {
 		padding: 12px;
 		background-color: var(--color-buttons);
-		color: var(--color-accent);
+		color: var(--color-innertext);
 		font-weight: 800;
 		transition: 0.08s;
 		font-size: 1rem;
@@ -344,7 +344,7 @@
 	.general-button {
 		padding: 12px;
 		background-color: var(--color-buttons);
-		color: var(--color-accent);
+		color: var(--color-innertext);
 		font-weight: 800;
 		transition: 0.08s;
 		font-size: 1rem;
