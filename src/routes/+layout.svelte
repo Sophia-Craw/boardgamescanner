@@ -7,12 +7,34 @@
 	import { fly } from "svelte/transition";
 	import ScanIcon from "$lib/assets/scan.png";
 	import ExportIcon from "$lib/assets/upload.png";
+	// import { FileTransfer } from "@capacitor/file-transfer";
+	import { Filesystem, Directory, Encoding } from "@capacitor/filesystem"
+	import { Share } from "@capacitor/share";
 
 	let { children, data } = $props();
 
 	let collectionArray: Array<GameObject> = $state([]);
-	let collectionURL: string = $state("");
-	let wishlistURL: string = $state("");
+	let saveDialog = $state(false);
+
+	const downloadData = async (pathName: string, mode: number) => {
+		const status = await Filesystem.requestPermissions();
+
+		if (status.publicStorage === "granted") {
+			const result = await Filesystem.writeFile({
+				data: mode === 1 ? localStorage.getItem("wishlist") || "[]" : localStorage.getItem("collection") || "[]",
+				path: `${pathName}`,
+				directory: Directory.Cache,
+				encoding: Encoding.UTF8,
+				recursive: true
+			})
+
+			await Share.share({
+				title: "Exported data",
+				url: result.uri,
+				dialogTitle: "Save Data"
+			})
+		}
+	}
 
 	$effect(() => {
 		if (
@@ -58,7 +80,7 @@
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
-{#if collectionURL || wishlistURL}
+{#if saveDialog}
 	<div
 		class="dialog"
 		in:fly={{ y: 200, duration: 200 }}
@@ -72,23 +94,19 @@
 			<h3>Your data is ready!</h3>
 			<p>Tap the save button below to save your data</p>
 			<div class="save-options">
-				<a download="collection.json" href={collectionURL}>
-					<button class="save-button">
-						Save Collection
-					</button>
-				</a>
-				<a download="wishlist.json" href={wishlistURL}>
-					<button class="save-button">
-						Save Wishlist
-					</button>
-				</a>
+				<button class="save-button" onclick={() => {downloadData("collection.json", 0)}}>
+					Save Collection
+				</button>
+				<button class="save-button" onclick={() => {downloadData("wishlist.json", 1)}}>
+					Save Wishlist
+				</button>
 			</div>
 		</div>
 		<div class="dialog-action">
-			<button class="general-button"
+			<button
+				class="general-button"
 				onclick={() => {
-					collectionURL = "";
-					wishlistURL = "";
+					saveDialog = false;
 				}}
 			>
 				Close
@@ -109,17 +127,9 @@
 					<p>Games Owned: {collectionArray.length}</p>
 				</div>
 				<div class="top-actions">
-					<button
-						onclick={() => {
-							if (localStorage) {
-								const collectionBlob = new Blob([localStorage.getItem("collection")?.toString() || "[]"], { type: "application/json" });
-								const wishlistBlob = new Blob([localStorage.getItem("wishlist") || "[]"], {type: "application/json"});
-
-								collectionURL = URL.createObjectURL(collectionBlob);
-								wishlistURL = URL.createObjectURL(wishlistBlob);
-							}
-						}}
-					>
+					<button onclick={() => {
+						saveDialog = true
+					}}>
 						<img class="icon" src={ExportIcon} alt="" />
 					</button>
 				</div>
@@ -200,6 +210,12 @@
 
 	.icon:active {
 		scale: 95%;
+	}
+
+	@media (prefers-color-scheme: light) {
+		.icon {
+			filter: invert(0);
+		}
 	}
 
 	h2 {
@@ -312,7 +328,7 @@
 	.save-button {
 		padding: 12px;
 		background-color: var(--color-buttons);
-		color: var(--color-primary);
+		color: var(--color-accent);
 		font-weight: 800;
 		transition: 0.08s;
 		font-size: 1rem;
@@ -328,7 +344,7 @@
 	.general-button {
 		padding: 12px;
 		background-color: var(--color-buttons);
-		color: var(--color-primary);
+		color: var(--color-accent);
 		font-weight: 800;
 		transition: 0.08s;
 		font-size: 1rem;
@@ -341,23 +357,23 @@
 		opacity: 60%;
 	}
 
-    .dialog-heading {
-        position: sticky;
-        top: 0;
-        left: 0;
-        right: 0;
-        padding: 20px;
-        padding-left: 12px;
-        border-bottom-style: solid;
-        border-width: 1px;
-        border-color: var(--color-sub);
-        background-color: var(--color-mid);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        z-index: 9;
+	.dialog-heading {
+		position: sticky;
+		top: 0;
+		left: 0;
+		right: 0;
+		padding: 20px;
+		padding-left: 12px;
+		border-bottom-style: solid;
+		border-width: 1px;
+		border-color: var(--color-sub);
+		background-color: var(--color-mid);
+		backdrop-filter: blur(20px);
+		-webkit-backdrop-filter: blur(20px);
+		z-index: 9;
 		color: var(--color-accent);
 		font-family: sans-serif;
-    }
+	}
 
 	.dialog-content {
 		padding: 40px;
@@ -374,21 +390,21 @@
 		font-family: sans-serif;
 	}
 
-    .dialog-action {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        padding: 20px;
-        padding-left: 12px;
-        border-top-style: solid;
-        border-width: 1px;
-        border-color: var(--color-sub);
-        background-color: var(--color-midy);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        z-index: 9;
-    }
+	.dialog-action {
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		padding: 20px;
+		padding-left: 12px;
+		border-top-style: solid;
+		border-width: 1px;
+		border-color: var(--color-sub);
+		background-color: var(--color-midy);
+		backdrop-filter: blur(20px);
+		-webkit-backdrop-filter: blur(20px);
+		z-index: 9;
+	}
 
 	.save-options {
 		display: flex;
@@ -396,26 +412,22 @@
 		justify-content: center;
 	}
 
-    .dialog {
-        background-color: var(--color-primary);
-        outline: none;
-        border-radius: 20px;
-        z-index: 7;
-        /* overflow: scroll; */
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 60dvh;
-        padding: 0;
-        padding-bottom: 70px;
-    }
+	.dialog {
+		background-color: var(--color-primary);
+		outline: none;
+		border-radius: 20px;
+		z-index: 7;
+		/* overflow: scroll; */
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		height: 60dvh;
+		padding: 0;
+		padding-bottom: 70px;
+	}
 
-    .dialog::backdrop {
-        background-color: rgba(0, 0, 0, 0.209);
-    }
-
-	a {
-		-webkit-tap-highlight-color: transparent;
+	.dialog::backdrop {
+		background-color: rgba(0, 0, 0, 0.209);
 	}
 </style>
