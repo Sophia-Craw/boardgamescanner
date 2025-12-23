@@ -8,9 +8,10 @@
     let isDetected: boolean = $state(false);
     let upcCode: string = $state("");
     let strm: MediaStream;
+    let cam;
 
     $effect(() => {
-        navigator.mediaDevices
+        cam = navigator.mediaDevices
             .getUserMedia({
                 video: {
                     facingMode: "environment",
@@ -58,13 +59,11 @@
 
     const scan = () => {
         if (isDetected && upcCode) {
-            let tracks = strm.getTracks();
-
-            tracks.forEach((t) => {
-                t.stop();
-                video.pause();
-                goto("/result?upc=" + upcCode);
-            });
+            // strm.getTracks()[1].stop()
+            Quagga.stop()
+            video.pause();
+            cam = null;
+            goto("/result?upc=" + upcCode);
         }
     };
 </script>
@@ -78,25 +77,20 @@
         <button
             class="btn-cancel"
             onclick={() => {
-                let tracks = strm.getTracks();
-
-                if (tracks.length > 0) {
-                    tracks.forEach((t) => {
-                        t.stop();
-                        video.pause();
-                        goto("/");
-                    });
+                if (strm.getTracks()[1]) {
+                    // strm.getTracks()[1].stop();
+                    video.pause();
+                    Quagga.stop()
+                    goto("/");
                 } else {
-                    goto("/"); 
+                    goto("/");
                 }
-
             }}>Cancel</button
         >
     </div>
 </main>
 
 <style>
-
     :root {
         overflow: hidden;
     }

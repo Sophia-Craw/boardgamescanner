@@ -37,7 +37,8 @@
     let loadingDisable: boolean = $state(true);
     let index: number = $state(0);
 
-    let dialogOpen = $state(false);
+    let dialogOpen: boolean = $state(false);
+    let failDialog: boolean = $state(false);
 
     let starCount: number = $state(0);
 
@@ -56,6 +57,12 @@
 
                 gameData.then((g) => {
                     data = g as GameObject;
+
+                    if (!g.bgg_info.length) {
+                        failDialog = true;
+                        return;
+                    }
+
                     starCount = data.stars || 0;
                 });
             });
@@ -165,7 +172,7 @@
             let gameObject = data.bgg_info[index];
             gameObject.index = index;
             gameObject.upc = data.upc;
-            gameObject.stars = starCount
+            gameObject.stars = starCount;
             storage.push(gameObject);
 
             localStorage.setItem("wishlist", JSON.stringify(storage));
@@ -211,7 +218,9 @@
                     gameObj.stars = count;
 
                     localStorage.setItem("collection", JSON.stringify(storage));
-                    collectionList.set(JSON.parse(localStorage.getItem("collection") || "[]"));
+                    collectionList.set(
+                        JSON.parse(localStorage.getItem("collection") || "[]"),
+                    );
                 }
             });
 
@@ -221,175 +230,209 @@
 
                     gameObj.stars = count;
 
-                    localStorage.setItem("wishlist", JSON.stringify(wishStorage));
-                    wishlistList.set(JSON.parse(localStorage.getItem("wishlist") || "[]"));
+                    localStorage.setItem(
+                        "wishlist",
+                        JSON.stringify(wishStorage),
+                    );
+                    wishlistList.set(
+                        JSON.parse(localStorage.getItem("wishlist") || "[]"),
+                    );
                 }
-            })
+            });
         }
     };
 </script>
 
-<main>
-    {#if dialogOpen}
-        <div
-            class="dialog"
-            in:fly={{ y: 200, duration: 200 }}
-            out:fly={{ y: 200, duration: 200 }}
-        >
-            {#if data.name && data.bgg_info[index].image_url !== ""}
-                <!-- <GameList games={data.bgg_info.length > 0 ? data.bgg_info : []} controls={false} />   -->
-                <div class="dialog-heading">
-                    <h3>Select your game</h3>
-                </div>
-                <GameList games={data.bgg_info} controls={false} />
-                <div class="dialog-action">
-                    <button
-                        onclick={() => {
-                            dialogOpen = false;
-                        }}
-                    >
-                        Close
-                    </button>
-                </div>
-            {/if}
+{#if failDialog}
+    <div
+        class="dialog"
+        in:fly={{ y: 200, duration: 200 }}
+        out:fly={{ y: 200, duration: 200 }}
+    >
+        <div class="dialog-heading">
+            <h3>An error has occurred</h3>
         </div>
-    {/if}
+        <div class="dialog-content">
+            <p>
+                Sorry, something has gone wrong. The game may not be available
+                at this moment.
+            </p>
+            <a href="/scanner">
+                <button class="btn-alt">
+                    <img class="icon-alt" src={ScanIcon} alt="" />
+                    Attempt Rescan
+                </button>
+            </a>
 
-    {#if data.bgg_info[index].image_url === ""}
-        <div class="skeleton"></div>
-    {:else}
-        <img
-            class="game-image"
-            src={data.bgg_info[index].image_url || ""}
-            alt=""
-        />
-    {/if}
+            <a href="/">
+                <button> Go Home </button>
+            </a>
+        </div>
+    </div>
+{/if}
 
-    <h2><b>{data.bgg_info[index].name || ""}</b></h2>
-    <p>
-        <b
-            >{data.bgg_info[index].published == 0
-                ? "--"
-                : data.bgg_info[index].published || 0}</b
-        >
-    </p>
-    <div class="rating">
+{#if data.bgg_info[0]?.id !== undefined}
+    <main>
+        {#if dialogOpen}
+            <div
+                class="dialog"
+                in:fly={{ y: 200, duration: 200 }}
+                out:fly={{ y: 200, duration: 200 }}
+            >
+                {#if data.name && data.bgg_info[index].image_url !== ""}
+                    <!-- <GameList games={data.bgg_info.length > 0 ? data.bgg_info : []} controls={false} />   -->
+                    <div class="dialog-heading">
+                        <h3>Select your game</h3>
+                    </div>
+                    <GameList games={data.bgg_info} controls={false} />
+                    <div class="dialog-action">
+                        <button
+                            onclick={() => {
+                                dialogOpen = false;
+                            }}
+                        >
+                            Close
+                        </button>
+                    </div>
+                {/if}
+            </div>
+        {/if}
+
+        {#if data.bgg_info[index].image_url === ""}
+            <div class="skeleton"></div>
+        {:else}
+            <img
+                class="game-image"
+                src={data.bgg_info[index].image_url || ""}
+                alt=""
+            />
+        {/if}
+
+        <h2><b>{data.bgg_info[index].name || ""}</b></h2>
+        <p>
+            <b
+                >{data.bgg_info[index].published == 0
+                    ? "--"
+                    : data.bgg_info[index].published || 0}</b
+            >
+        </p>
+        <div class="rating">
+            <button
+                class="star-btn"
+                onclick={() => {
+                    if (starCount === 1) {
+                        handleStars(0);
+                    } else {
+                        handleStars(1);
+                    }
+                }}
+            >
+                <img
+                    class={starCount >= 1 ? "star-fill" : "star"}
+                    src={StarIcon}
+                    alt=""
+                />
+            </button>
+            <button
+                class="star-btn"
+                onclick={() => {
+                    handleStars(2);
+                }}
+            >
+                <img
+                    class={starCount >= 2 ? "star-fill" : "star"}
+                    src={StarIcon}
+                    alt=""
+                />
+            </button>
+            <button
+                class="star-btn"
+                onclick={() => {
+                    handleStars(3);
+                }}
+            >
+                <img
+                    class={starCount >= 3 ? "star-fill" : "star"}
+                    src={StarIcon}
+                    alt=""
+                />
+            </button>
+            <button
+                class="star-btn"
+                onclick={() => {
+                    handleStars(4);
+                }}
+            >
+                <img
+                    class={starCount >= 4 ? "star-fill" : "star"}
+                    src={StarIcon}
+                    alt=""
+                />
+            </button>
+            <button
+                class="star-btn"
+                onclick={() => {
+                    handleStars(5);
+                }}
+            >
+                <img
+                    class={starCount >= 5 ? "star-fill" : "star"}
+                    src={StarIcon}
+                    alt=""
+                />
+            </button>
+        </div>
+        <div class="options">
+            <button
+                disabled={loadingDisable}
+                class={isOwned ? "btn-owned" : ""}
+                onclick={own}
+            >
+                <img class="icon" src={isOwned ? CheckIcon : AddIcon} alt="" />
+                I Own This
+            </button>
+            <button
+                disabled={loadingDisable || isOwned ? true : false}
+                class={isWishlist ? "btn-wishlist" : ""}
+                onclick={wishlist}
+            >
+                <img
+                    class="icon"
+                    src={isWishlist ? HeartIcon : HeartIconOutline}
+                    alt=""
+                />
+                I Want This
+            </button>
+        </div>
         <button
-            class="star-btn"
+            class="btn-alt"
             onclick={() => {
-                if (starCount === 1) {
-                    handleStars(0);
-                } else {
-                    handleStars(1);
-                }
+                goto("/scanner");
             }}
         >
-            <img
-                class={starCount >= 1 ? "star-fill" : "star"}
-                src={StarIcon}
-                alt=""
-            />
+            <img class="icon-alt" src={ScanIcon} alt="" />
+            Rescan
         </button>
         <button
-            class="star-btn"
             onclick={() => {
-                handleStars(2);
+                goto("/");
             }}
         >
-            <img
-                class={starCount >= 2 ? "star-fill" : "star"}
-                src={StarIcon}
-                alt=""
-            />
+            <img class="icon" src={CheckIcon} alt="" />
+            Done
         </button>
         <button
-            class="star-btn"
+            class="btn-alt"
             onclick={() => {
-                handleStars(3);
+                dialogOpen = true;
             }}
         >
-            <img
-                class={starCount >= 3 ? "star-fill" : "star"}
-                src={StarIcon}
-                alt=""
-            />
+            Not the right game?
         </button>
-        <button
-            class="star-btn"
-            onclick={() => {
-                handleStars(4);
-            }}
-        >
-            <img
-                class={starCount >= 4 ? "star-fill" : "star"}
-                src={StarIcon}
-                alt=""
-            />
-        </button>
-        <button
-            class="star-btn"
-            onclick={() => {
-                handleStars(5);
-            }}
-        >
-            <img
-                class={starCount >= 5 ? "star-fill" : "star"}
-                src={StarIcon}
-                alt=""
-            />
-        </button>
-    </div>
-    <div class="options">
-        <button
-            disabled={loadingDisable}
-            class={isOwned ? "btn-owned" : ""}
-            onclick={own}
-        >
-            <img class="icon" src={isOwned ? CheckIcon : AddIcon} alt="" />
-            I Own This
-        </button>
-        <button
-            disabled={loadingDisable || isOwned ? true : false}
-            class={isWishlist ? "btn-wishlist" : ""}
-            onclick={wishlist}
-        >
-            <img
-                class="icon"
-                src={isWishlist ? HeartIcon : HeartIconOutline}
-                alt=""
-            />
-            I Want This
-        </button>
-    </div>
-    <button
-        class="btn-alt"
-        onclick={() => {
-            goto("/scanner");
-        }}
-    >
-        <img class="icon-alt" src={ScanIcon} alt="" />
-        Rescan
-    </button>
-    <button
-        onclick={() => {
-            goto("/");
-        }}
-    >
-        <img class="icon" src={CheckIcon} alt="" />
-        Done
-    </button>
-    <button
-        class="btn-alt"
-        onclick={() => {
-            dialogOpen = true;
-        }}
-    >
-        Not the right game?
-    </button>
-</main>
+    </main>
+{/if}
 
 <style>
-
     :root {
         overflow-y: scroll;
         padding-bottom: 40px;
@@ -537,6 +580,16 @@
         z-index: 9;
     }
 
+    .dialog-content {
+        padding: 40px;
+        font-family: sans-serif;
+        color: white;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
     .dialog-action {
         position: fixed;
         bottom: 0;
@@ -609,6 +662,10 @@
 
     .star-btn:active {
         opacity: 100%;
+    }
+
+    a {
+        text-decoration: none;
     }
 
     @keyframes fadeInOut {
