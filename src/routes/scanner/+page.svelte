@@ -15,6 +15,7 @@
             .getUserMedia({
                 video: {
                     facingMode: "environment",
+                    frameRate: 60
                 },
                 audio: false,
             })
@@ -102,6 +103,8 @@
 
     video {
         width: 100dvw;
+        max-height: 500px;
+        object-fit: cover;
         mask: linear-gradient(
             white,
             white,
